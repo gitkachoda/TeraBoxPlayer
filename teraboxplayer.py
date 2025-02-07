@@ -27,7 +27,8 @@ DB_NAME = "terabox_bot"
 COLLECTION_NAME = "user_ids"
 
 # ✅ FIX: MongoDB Atlas Connection with TLS for Termux
-client = MongoClient(MONGO_URI, tls=True, tlsAllowInvalidCertificates=True)
+client = MongoClient(MONGO_URI, tls=True, tlsAllowInvalidCertificates=True, directConnection=True)
+
 
 db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
