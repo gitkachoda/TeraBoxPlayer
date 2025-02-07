@@ -26,7 +26,9 @@ MONGO_URI = "mongodb+srv://botplays90:botplays90@botplays.ycka9.mongodb.net/?ret
 DB_NAME = "terabox_bot"
 COLLECTION_NAME = "user_ids"
 
-client = MongoClient(MONGO_URI)
+# ✅ FIX: MongoDB Atlas Connection with TLS for Termux
+client = MongoClient(MONGO_URI, tls=True, tlsAllowInvalidCertificates=True)
+
 db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
 
@@ -121,14 +123,12 @@ async def process_video(chat_id, video_url):
             await client.send_message(chat_id, "❌ Please send a valid **TeraBox or TeraShare video link**.")
             return
         
-        # ✅ FIX: Message ke ID ka sahi use
         processing_message = await client.send_message(chat_id, "⏳ Processing your video link... Please wait. 🚀")
 
         response = requests.post(API_URL, json={"video_url": video_url}, timeout=15)
         response.raise_for_status()
         data = response.json()
 
-        # ✅ FIX: Pehle ka message delete ho
         await processing_message.delete()
 
         if "stream_link" in data:
