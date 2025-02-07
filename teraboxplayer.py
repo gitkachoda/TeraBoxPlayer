@@ -22,16 +22,21 @@ api_id = "23635644"
 api_hash = "467b556b4aa75087d3a0091578c88d3a"
 notification = -1002266338823
 
-MONGO_URI = "mongodb+srv://botplays90:botplays90@botplays.ycka9.mongodb.net/?retryWrites=true&w=majority&appName=botplays"
-DB_NAME = "terabox_bot"
-COLLECTION_NAME = "user_ids"
+# ✅ FIX: MongoDB URI ko `mongodb://` format me convert kiya hai
+MONGO_URI = "mongodb://botplays90:botplays90@cluster0.mongodb.net:27017/?authSource=admin"
 
-# ✅ FIX: MongoDB Atlas Connection with TLS for Termux
-client = MongoClient(MONGO_URI, tls=True, tlsAllowInvalidCertificates=True, directConnection=True)
+# ✅ FIX: Termux ke liye TLS & Timeouts set kiye hain
+client = MongoClient(
+    MONGO_URI,
+    tls=True,
+    tlsAllowInvalidCertificates=True,
+    serverSelectionTimeoutMS=5000,  # Timeout fix
+    socketTimeoutMS=5000,           # Socket timeout fix
+    connectTimeoutMS=5000           # Connection timeout fix
+)
 
-
-db = client[DB_NAME]
-collection = db[COLLECTION_NAME]
+db = client["terabox_bot"]
+collection = db["user_ids"]
 
 app = Flask('')
 @app.route('/')
